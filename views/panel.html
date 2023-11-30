@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/panel.css">
+</head>
+<body>
+
+	<template id="tpl__carnet">
+		<a class="link">
+			<div class="div">
+				<div class="nombre">Aqui va el nombre</div>
+				<div class="ubicacion">Aqui va la ubicacion</div>
+				<div class="visitas">Aqui van las visitas</div>
+			</div>
+		</a>
+	</template>
+
+	<div class="lista">
+		<h1>Estaciones</h1>
+		<div id="listado">
+
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		const fetchAppEstacionAPI = async () => {
+		    try {
+		      const response = await fetch('https://mattprofe.com.ar/proyectos/app-estacion/datos.php?mode=list-stations');
+		      const data = await response.json();
+		      return data;
+		    }
+		    catch (error) {
+		      console.log(error);
+		    }
+	  	}
+
+	  	fetchAppEstacionAPI();
+
+		function refreshPage(){
+
+            listado.innerHTML = "";
+
+            fetchAppEstacionAPI().then(alumnos => {
+
+                console.log(alumnos);
+
+                alumnos.forEach( row => {
+                    createCard(row);        
+                });
+
+            });
+        }
+
+        refreshPage();
+
+        function createCard (info) {
+            console.log(info);
+            const tpl = tpl__carnet.content;
+            const clon = tpl.cloneNode(true);
+
+            clon.querySelector(".link").setAttribute("href", "detalle.html?chipid="+info.chipid);
+            clon.querySelector(".nombre").innerHTML = info.apodo;
+            clon.querySelector(".ubicacion").innerHTML = info.ubicacion;
+            clon.querySelector(".visitas").innerHTML = info.visitas;
+
+            listado.appendChild(clon)
+        }
+	  	
+	</script>
+</body>
+</html>
